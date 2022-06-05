@@ -55,9 +55,6 @@ async def today(username: str, color: str = "#75ccde"):
     height = todays_contributions * 10
     default_height = 485 + height
 
-    print(height)
-
-
     content = f"""
     <svg xmlns="http://www.w3.org/2000/svg" fill="{ f'#{color}' if all(c in hexdigits for c in color) else color}">
         <g transform="translate(0,351) scale(0.1,-0.1)">
