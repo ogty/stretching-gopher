@@ -10,7 +10,7 @@ from fastapi import FastAPI, Response
 
 load_dotenv()
 app = FastAPI()
-TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv("TOKEN")
 
 
 @app.get("/")
