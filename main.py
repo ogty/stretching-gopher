@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 from string import hexdigits
@@ -15,8 +16,8 @@ TOKEN = os.getenv('TOKEN')
 @app.get("/")
 async def today(username: str, color: str = "#75ccde"):
     headers = {
-        'Authorization': f'bearer {TOKEN}',
-        'Content-Type': 'application/json',
+        "Authorization": f"bearer {TOKEN}",
+        "Content-Type": "application/json",
     }
 
     query = """
@@ -45,7 +46,7 @@ async def today(username: str, color: str = "#75ccde"):
         "variables": variables
     }
     response = requests.post(
-        'https://api.github.com/graphql', 
+        "https://api.github.com/graphql", 
         headers=headers, 
         data=json.dumps(body)
     )
@@ -54,7 +55,7 @@ async def today(username: str, color: str = "#75ccde"):
 
     height = todays_contributions * 10
     default_height = 238
-    svg_height = height + default_height + 175
+    svg_height = height + default_height
 
     content = f"""
     <svg xmlns="http://www.w3.org/2000/svg" height="{svg_height}" width="180" viewbox="0 0 {svg_height} 500" fill="{ f'#{color}' if all(c in hexdigits for c in color) else color}">
@@ -74,4 +75,9 @@ async def today(username: str, color: str = "#75ccde"):
     </svg>
     """
 
-    return Response(content=content, media_type="image/svg+xml")
+    response_headers = {
+        "Cache-Control": "no-cache",
+        "Expires": (datetime.datetime.now() + datetime.timedelta(hours=1)).strftime("%a, %d %b %Y %H:%M:%S GMT")
+    }
+
+    return Response(content=content, media_type="image/svg+xml", headers=response_headers)
